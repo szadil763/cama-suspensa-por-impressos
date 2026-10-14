@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cama de casal flutuante com base recuada, tubo galvanizado e conexões híbridas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f3; --panel:#ffffff; --ink:#15222c; --muted:#556572; --rule:#cbd4da;
+  --print:#e8650f; --stage:#e3e9ed; --focus:#0a5bd6; --note:#fff3e6; --note-ink:#5a2d05;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1519; --panel:#161f26; --ink:#e7eef3; --muted:#9aabb7; --rule:#293743;
+    --print:#ff8a3d; --stage:#1a252d; --focus:#6aa8ff; --note:#2a1d10; --note-ink:#ffd9b5;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1519; --panel:#161f26; --ink:#e7eef3; --muted:#9aabb7; --rule:#293743;
+  --print:#ff8a3d; --stage:#1a252d; --focus:#6aa8ff; --note:#2a1d10; --note-ink:#ffd9b5;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+h1,h2,h3{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:600;line-height:1.1;margin:0}
+h2{font-size:clamp(1.6rem,3.4vw,2.1rem);margin:0 0 .6rem}
+h3{font-size:1.25rem;margin:1.4rem 0 .4rem}
+p{margin:.5rem 0;max-width:72ch}
+
+.stage{position:relative;height:clamp(360px,64vh,700px);background:var(--stage);overflow:hidden}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage-title{position:absolute;left:16px;top:14px;right:16px;pointer-events:none}
+.stage-title h1{font-size:clamp(1.5rem,4.2vw,2.5rem);font-weight:700;max-width:18ch}
+.stage-title p{color:var(--muted);font-size:.95rem;margin:.35rem 0 0;max-width:46ch}
+.hint{position:absolute;right:14px;bottom:10px;font-size:.8rem;color:var(--muted);pointer-events:none}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:10px 22px;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--rule);align-items:center}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.grp>span.lbl{color:var(--muted);font-size:.9rem;margin-right:2px}
+.seg button{font:inherit;font-weight:500;padding:7px 12px;min-height:40px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);cursor:pointer;border-radius:4px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tog{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 4px;cursor:pointer;user-select:none}
+.tog input{width:18px;height:18px;accent-color:var(--print)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:10px 16px;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--rule);background:var(--bg)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1px solid rgba(0,0,0,.25)}
+
+main{max-width:980px;margin:0 auto;padding:8px 16px 64px}
+section{padding-top:36px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));border:1px solid var(--rule);background:var(--panel);margin-top:12px}
+.facts div{padding:14px 16px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.facts b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:600;line-height:1.1}
+.facts span{color:var(--muted);font-size:.92rem}
+.tblwrap{overflow-x:auto;border:1px solid var(--rule);background:var(--panel);margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:600px;font-size:.96rem}
+th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-weight:600;background:color-mix(in srgb,var(--ink) 6%,var(--panel))}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.ok td{background:color-mix(in srgb,var(--print) 9%,var(--panel))}
+ol.steps{padding-left:1.3rem;max-width:72ch}
+ol.steps li{margin:.55rem 0}
+ul{padding-left:1.2rem;max-width:72ch}
+li{margin:.3rem 0}
+.note{background:var(--note);color:var(--note-ink);border-left:4px solid var(--print);padding:12px 16px;margin:16px 0;max-width:76ch}
+footer{color:var(--muted);font-size:.9rem;padding-top:40px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="stage" id="stage">
+    <div class="stage-title">
+      <h1>Cama de casal flutuante com base recuada</h1>
+      <p>Estrado de tubo sobre uma base menor, recuada 15 cm. Sem cubo e sem escoras. Todos os nós impressos, com duas diagonais de tubo no plano da base contra o balanço. Colchão de 138 × 188 cm.</p>
+    </div>
+    <div class="hint">Arraste para girar, role ou pince para aproximar</div>
+    <div class="nogl" id="nogl" hidden>Seu navegador não conseguiu abrir o modelo 3D. As tabelas abaixo continuam valendo.</div>
+  </div>
+  <div class="bar" role="toolbar" aria-label="Controles do modelo 3D">
+    <div class="grp seg" id="views"><span class="lbl">Vista</span>
+      <button data-view="persp" aria-pressed="true">Perspectiva</button>
+      <button data-view="pe" aria-pressed="false">Pé da cama</button>
+      <button data-view="lado" aria-pressed="false">Lateral</button>
+      <button data-view="baixo" aria-pressed="false">Por baixo</button>
+      <button data-view="topo" aria-pressed="false">Topo</button>
+    </div>
+    <div class="grp seg" id="finish"><span class="lbl">Tubo</span>
+      <button data-finish="galv" aria-pressed="true">Galvanizado</button>
+      <button data-finish="blk" aria-pressed="false">Preto</button>
+    </div>
+    <div class="grp">
+      <label class="tog"><input type="checkbox" id="tBase" checked> Postes e base</label>
+      <label class="tog"><input type="checkbox" id="tCab" checked> Diagonais da base (2)</label>
+      <label class="tog"><input type="checkbox" id="tHl" checked> Destacar peças impressas</label>
+      <label class="tog"><input type="checkbox" id="tSlat" checked> Ripas</label>
+      <label class="tog"><input type="checkbox" id="tMat" checked> Colchão</label>
+      <label class="tog"><input type="checkbox" id="tBolt" checked> Parafusos</label>
+      <label class="tog"><input type="checkbox" id="tWall" checked> Parede</label>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:#b4bcc4"></i>Tubo de aço galvanizado</span>
+    <span><i class="sw" style="background:#e8650f"></i>Peça impressa em 3D</span>
+    <span><i class="sw" style="background:#3a3f45"></i>Grampos, chapas e suportes de aço</span>
+    <span><i class="sw" style="background:#c99a62"></i>Ripas de madeira</span>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <h2>A ideia: base recuada</h2>
+  <p>Esta versão substitui a do cubo e das escoras. Todas as camas suspensas baratas que pesquisei usam o mesmo truque: o apoio fica escondido embaixo, recuado da borda, e o estrado avança em volta dele. Aqui o estrado é de tubo de 1¼", e a base é uma moldura de tubo mais baixa, no piso, recuada 15 cm dos lados e do pé. Seis postes ligam a base ao estrado. Do lado da cabeceira, a base chega até a parede.</p>
+  <p>O peso desce direto pelos postes, em compressão, sem empuxo horizontal. Por isso as conexões trabalham bem menos do que no projeto com cubo. A cabeceira é um painel de tubo fixado na parede, e duas cantoneiras seguram o estrado para baixo na cabeceira, caso alguém sente no canto do pé. Como nó impresso não é rígido à flexão, duas diagonais de tubo no plano da base seguram o balanço lateral. Não há cabos: quem segura o resto são as cantoneiras chumbadas e um teste simples de rigidez do nó.</p>
+  <div class="facts">
+    <div><b>148 × 196 cm</b><span>Tamanho externo do estrado</span></div>
+    <div><b>28 cm</b><span>Vão livre entre o estrado e o piso</span></div>
+    <div><b>15 cm</b><span>Recuo da base nos lados e no pé</span></div>
+    <div><b>59 cm</b><span>Altura do topo do colchão até o piso</span></div>
+    <div><b>5 barras de 6 m</b><span>4 de tubo de 1¼" (estrado e base) e 1 de 1" (cabeceira)</span></div>
+    <div><b>62 impressões</b><span>Cerca de 11,4 kg de filamento, ou 9,2 kg com preenchimento leve</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Teste de 120 kg nas bordas</h2>
+  <p>Refiz o modelo em 3D do zero para esta estrutura. O estrado tem longarinas e viga central contínuas, apoiadas sobre as travessas, com os cruzamentos só encostados (a sela transmite a força de um tubo ao outro, não o momento). Os postes são rígidos na travessa e na base. Todos os casos somam o peso morto (colchão, ripas, estrutura e cabeceira: 110 kgf) e uma pessoa de 120 kg parada em pontos diferentes da borda. O escoamento de referência do tubo é 235 MPa (alguns tubos galvanizados comerciais chegam só a 205 MPa, e os percentuais sobem uns 15%).</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>120 kg parados em</th><th class="n">Flecha</th><th class="n">Tensão no tubo</th><th class="n">Maior carga num poste</th><th class="n">Arrancamento</th></tr></thead>
+    <tbody>
+      <tr><td>Canto do pé</td><td class="n">0,9 mm</td><td class="n">57 MPa (24%)</td><td class="n">1,75 kN</td><td class="n">0,04 kN</td></tr>
+      <tr><td>Pé, a 50 cm do centro</td><td class="n">0,6 mm</td><td class="n">43 MPa (18%)</td><td class="n">1,49 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Meio do pé</td><td class="n">1,3 mm</td><td class="n">52 MPa (22%)</td><td class="n">0,88 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Lateral, perto do pé</td><td class="n">0,9 mm</td><td class="n">59 MPa (25%)</td><td class="n">0,94 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Lateral, no meio</td><td class="n">0,3 mm</td><td class="n">50 MPa (21%)</td><td class="n">1,52 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Lateral, perto da cabeceira</td><td class="n">0,8 mm</td><td class="n">55 MPa (23%)</td><td class="n">1,21 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Canto da cabeceira</td><td class="n">0,3 mm</td><td class="n">48 MPa (21%)</td><td class="n">1,43 kN</td><td class="n">0,02 kN</td></tr>
+      <tr><td>Meio da cabeceira</td><td class="n">0,9 mm</td><td class="n">58 MPa (25%)</td><td class="n">0,70 kN</td><td class="n">nenhum</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Mais de uma pessoa</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Caso</th><th class="n">Flecha</th><th class="n">Tensão no tubo</th><th class="n">Maior carga num poste</th></tr></thead>
+    <tbody>
+      <tr><td>2 pessoas nos cantos do pé</td><td class="n">0,8 mm</td><td class="n">55 MPa (23%)</td><td class="n">1,59 kN</td></tr>
+      <tr><td>2 pessoas sentadas na mesma lateral</td><td class="n">1,2 mm</td><td class="n">74 MPa (32%)</td><td class="n">2,21 kN</td></tr>
+      <tr><td>4 pessoas: 2 nos cantos do pé e 2 nas laterais</td><td class="n">0,6 mm</td><td class="n">59 MPa (25%)</td><td class="n">1,67 kN</td></tr>
+      <tr><td>2 pessoas deitadas (240 kg distribuídos)</td><td class="n">0,6 mm</td><td class="n">40 MPa (17%)</td><td class="n">0,82 kN</td></tr>
+    </tbody>
+  </table></div>
+  <p>Parado, o estrado passa com folga. O pior caso é duas pessoas sentadas na mesma lateral, com o tubo a 32% do escoamento.</p>
+</section>
+
+<section>
+  <h2>Simulação de uso dinâmico</h2>
+  <p>Mesmo método do projeto anterior: simulação no tempo (integração de Newmark), massas nos nós, a pessoa de 120 kg como massa presa ao ponto carregado e amortecimento de 3%. Os quatro cenários são: sentar devagar (0,6 s), sentar de repente (0,05 s), cair de 10 cm sobre o colchão (pulso de 0,2 s) e cair de 30 cm (abuso, pulso de 0,25 s).</p>
+  <h3>Frequências naturais</h3>
+  <ul>
+    <li>Cama vazia: 6,8 Hz.</li>
+    <li>Com 120 kg sentados no canto do pé ou no meio do pé: 3,7 Hz. No meio da lateral: 5,2 Hz.</li>
+    <li>3,7 Hz fica acima de caminhar (cerca de 2 Hz) e de pular (2 a 3 Hz).</li>
+  </ul>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Onde</th><th>Cenário</th><th class="n">Flecha</th><th class="n">Tensão no tubo</th><th class="n">Maior carga num poste</th><th class="n">Arrancamento</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="4">Canto do pé</td><td>Sentar devagar</td><td class="n">0,9 mm</td><td class="n">58 MPa (25%)</td><td class="n">1,77 kN</td><td class="n">0,04 kN</td></tr>
+      <tr><td>Sentar de repente</td><td class="n">1,0 mm</td><td class="n">67 MPa (28%)</td><td class="n">2,03 kN</td><td class="n">0,09 kN</td></tr>
+      <tr><td>Cair de 10 cm</td><td class="n">2,2 mm</td><td class="n">141 MPa (60%)</td><td class="n">4,20 kN</td><td class="n">0,49 kN</td></tr>
+      <tr><td>Cair de 30 cm (abuso)</td><td class="n">2,6 mm</td><td class="n">168 MPa (71%)</td><td class="n">4,99 kN</td><td class="n">0,64 kN</td></tr>
+      <tr><td rowspan="4">Lateral, no meio</td><td>Sentar devagar</td><td class="n">0,3 mm</td><td class="n">50 MPa (21%)</td><td class="n">1,54 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Sentar de repente</td><td class="n">0,4 mm</td><td class="n">56 MPa (24%)</td><td class="n">1,70 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Cair de 10 cm</td><td class="n">0,8 mm</td><td class="n">116 MPa (49%)</td><td class="n">3,37 kN</td><td class="n">0,06 kN</td></tr>
+      <tr><td>Cair de 30 cm (abuso)</td><td class="n">1,0 mm</td><td class="n">136 MPa (58%)</td><td class="n">3,94 kN</td><td class="n">0,12 kN</td></tr>
+      <tr><td rowspan="4">Meio do pé</td><td>Sentar devagar</td><td class="n">1,3 mm</td><td class="n">53 MPa (22%)</td><td class="n">0,89 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Sentar de repente</td><td class="n">1,7 mm</td><td class="n">67 MPa (29%)</td><td class="n">1,12 kN</td><td class="n">nenhum</td></tr>
+      <tr><td>Cair de 10 cm</td><td class="n">3,2 mm</td><td class="n">123 MPa (53%)</td><td class="n">2,02 kN</td><td class="n">0,09 kN</td></tr>
+      <tr><td>Cair de 30 cm (abuso)</td><td class="n">4,0 mm</td><td class="n">151 MPa (64%)</td><td class="n">2,47 kN</td><td class="n">0,17 kN</td></tr>
+      <tr><td rowspan="4">Canto da cabeceira</td><td>Sentar devagar</td><td class="n">0,3 mm</td><td class="n">49 MPa (21%)</td><td class="n">1,44 kN</td><td class="n">0,02 kN</td></tr>
+      <tr><td>Sentar de repente</td><td class="n">0,3 mm</td><td class="n">51 MPa (22%)</td><td class="n">1,49 kN</td><td class="n">0,03 kN</td></tr>
+      <tr><td>Cair de 10 cm</td><td class="n">0,6 mm</td><td class="n">111 MPa (47%)</td><td class="n">3,15 kN</td><td class="n">0,22 kN</td></tr>
+      <tr><td>Cair de 30 cm (abuso)</td><td class="n">0,8 mm</td><td class="n">135 MPa (57%)</td><td class="n">3,85 kN</td><td class="n">0,29 kN</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Balançar ou quicar no canto do pé</h3>
+  <p>Força que oscila ±50% do peso da pessoa, por 5 segundos:</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Frequência</th><th class="n">Tensão, amortecimento de 5%</th><th class="n">Tensão, amortecimento de 10%</th></tr></thead>
+    <tbody>
+      <tr><td>2 Hz</td><td class="n">86 MPa (37%)</td><td class="n">85 MPa (36%)</td></tr>
+      <tr><td>3 Hz</td><td class="n">86 MPa (37%)</td><td class="n">85 MPa (36%)</td></tr>
+      <tr><td>3,7 Hz (ressonância com uma pessoa no canto)</td><td class="n">88 MPa (37%)</td><td class="n">87 MPa (37%)</td></tr>
+      <tr><td>4 Hz</td><td class="n">89 MPa (38%)</td><td class="n">88 MPa (37%)</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Não há problema de ressonância: a tensão fica entre 36% e 38% em qualquer frequência.</li>
+    <li>O caso mais severo, cair de 10 cm no canto do pé, chega a 60% do escoamento, contra 70% no projeto do cubo. Na queda de 30 cm, ainda 71%.</li>
+    <li>O único esforço que a estrutura não segura sozinha é o arrancamento: no máximo 0,64 kN, no canto da cabeceira, no caso de abuso. Duas cantoneiras na parede resolvem, como explicado adiante.</li>
+  </ul>
+  <div class="note">Limites da simulação: material elástico linear, postes rígidos nas pontas (na prática, os colares com parafuso são semirrígidos, e a flecha real fica um pouco maior), a pessoa como massa presa ao ponto, pulso de impacto estimado e amortecimento estimado. Serve para achar pontos fracos e comparar variantes, não como certificação. Confirme com o teste físico.</div>
+</section>
+
+<section>
+  <h2>Por que o recuo é de 15 cm e não de 20 cm</h2>
+  <p>Os produtos comerciais usam recuo de uns 20 cm, mas eles são feitos de MDF e pesam bem mais. Com estrado de tubo, que pesa uns 110 kgf com colchão, o recuo de 20 cm faz o canto do pé trabalhar em balanço demais. Testei vários recuos com uma pessoa de 120 kg caindo de 10 cm no canto do pé.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Recuo nos lados / no pé</th><th class="n">Flecha</th><th class="n">Tensão no tubo</th><th class="n">Arrancamento</th></tr></thead>
+    <tbody>
+      <tr><td>21,5 cm / 20 cm</td><td class="n">5,7 mm</td><td class="n">235 MPa (100%)</td><td class="n">0,90 kN</td></tr>
+      <tr class="ok"><td>15 cm / 15 cm (adotado)</td><td class="n">2,4 mm</td><td class="n">139 MPa (59%)</td><td class="n">0,50 kN</td></tr>
+      <tr><td>14,5 cm / 10 cm</td><td class="n">1,4 mm</td><td class="n">119 MPa (51%)</td><td class="n">0,21 kN</td></tr>
+      <tr><td>11,5 cm / 10 cm</td><td class="n">1,1 mm</td><td class="n">96 MPa (41%)</td><td class="n">0,19 kN</td></tr>
+      <tr><td>21,5 cm nos lados, base alinhada com o pé</td><td class="n">1,1 mm</td><td class="n">93 MPa (40%)</td><td class="n">0,44 kN</td></tr>
+    </tbody>
+  </table></div>
+  <p>Esta tabela foi feita com base e postes de 1", e com base e postes de 1¼" os valores ficam iguais ou um pouco menores. Com 15 cm, o visual continua flutuante, com sombra em volta, e o tubo fica a 59% do escoamento. Se preferir o efeito mais forte, dá para subir para 20 cm em troca de mais tubo grosso (1½"), mas eu não recomendo.</p>
+</section>
+
+<section>
+  <h2>Ligações: tudo impresso, com aço onde há carga</h2>
+  <p>Você escolheu imprimir também os nós dos postes e da base. São 62 impressões e uns 11,4 kg de filamento (9,2 kg na versão leve), pela estimativa feita nos sólidos dos arquivos STL. O aço entra onde o plástico não deve trabalhar sozinho: arruelas nos fundos dos soquetes, parafusos passantes, grampos e pés niveladores.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Ligação</th><th class="n">Qtd</th><th>Maior esforço (todos os casos, incluindo queda de 30 cm)</th><th>Como o nó impresso segura</th></tr></thead>
+    <tbody>
+      <tr><td>Colar do poste na travessa (PC)</td><td class="n">6</td><td>Compressão de 4,9 kN e arrancamento de 0,64 kN no poste. Cortante de 1,2 kN</td><td>Colar bipartido de 1¼" por baixo da travessa, com soquete de 80 mm para o poste. A ponta do poste apoia numa arruela de aço de Ø42 × 5 mm, solta no fundo do soquete, o que dá uns 3,5 MPa sobre o plástico. O colar empurra a travessa por baixo, em compressão direta. 3 parafusos M10 no soquete e 2 M10 no anel</td></tr>
+      <tr><td>Canto e meio da base (BC e BM)</td><td class="n">4 e 2</td><td>O poste desce 4,9 kN sobre o nó. Nos tubos da base o esforço é pequeno: 1,2 kN</td><td>Mesma arruela no fundo do soquete do poste. A força passa pelo nó até um pé nivelador de base larga (Ø 40 mm), que aperta o piso a uns 4 MPa. Os tubos da base e as diagonais entram em soquetes de 68 mm com 2 parafusos M10 cada. Quatro dos seis nós têm um braço extra, mais longo, para a diagonal</td></tr>
+      <tr><td>Cruzamentos longarina ou viga central sobre a travessa</td><td class="n">12</td><td>Compressão de um tubo sobre o outro, até 4,2 kN. Horizontal de no máximo 0,2 kN</td><td>Sela impressa de duas metades, fechada por 2 grampos U de aço que atravessam a sela. Pressão sobre o plástico de uns 3 MPa</td></tr>
+      <tr><td>Cabeceira (F, G, H, I)</td><td class="n">7</td><td>Quase nenhum: o painel está preso na parede</td><td>Nós impressos de 1", como antes</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>Por que a arruela de aço:</strong> a ponta do tubo de 1¼" tem só 310 mm² de área. Apoiada direto no plástico, apertaria 4,9 kN a uns 16 MPa, acima do que o PETG suporta com carga constante (perto de 10 MPa). Com a arruela de Ø42 mm (1385 mm²), fica em 3,5 MPa. Ela cai pelo furo de 42,5 mm do soquete. A versão de 45 mm, em rebaixo, não passaria pelo furo.</li>
+    <li><strong>Por que o pé de base larga:</strong> se a carga passasse só pela rosca do pé, o parafuso apertaria o plástico do nó a mais de 10 MPa. A base do pé (Ø 40 mm) reparte isso em 3,9 MPa. A rosca só serve para nivelar.</li>
+    <li>Nas simulações de 120 kg, os postes tinham nós rígidos. O plástico é semirrígido, o que não muda as flechas nem as tensões (veja a seção seguinte), mas muda o balanço lateral.</li>
+  </ul>
+</section>
+<section>
+  <h2>Rigidez dos nós e o balanço lateral</h2>
+  <p>Nó impresso não é rígido à flexão como um nó soldado. Refiz a simulação sem cabos, com as duas diagonais de tubo na base e as cantoneiras chumbadas nas pontas das longarinas, variando a rigidez de rotação dos nós (em kN·m/rad, quanto maior, mais rígido). O empurrão lateral é de 300 N.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Rigidez do nó</th><th class="n">Teste do nó: deflexão de 10 kg a 50 cm</th><th class="n">Meio da lateral, em x</th><th class="n">Canto do pé, em x</th><th class="n">Frequência com 120 kg no canto</th><th class="n">Queda de 10 cm</th></tr></thead>
+    <tbody>
+      <tr><td>Rígido (referência)</td><td class="n">—</td><td class="n">1,0 mm</td><td class="n">3,1 mm</td><td class="n">3,8 Hz</td><td class="n">141 MPa</td></tr>
+      <tr><td>20 kN·m/rad</td><td class="n">1,5 mm</td><td class="n">0,4 mm</td><td class="n">0,8 mm</td><td class="n">8,1 Hz</td><td class="n">138 MPa</td></tr>
+      <tr><td>5 kN·m/rad</td><td class="n">5,2 mm</td><td class="n">0,8 mm</td><td class="n">2,2 mm</td><td class="n">4,8 Hz</td><td class="n">137 MPa</td></tr>
+      <tr class="ok"><td>2 kN·m/rad (limite prático)</td><td class="n">12,5 mm</td><td class="n">1,5 mm</td><td class="n">4,8 mm</td><td class="n">3,2 Hz</td><td class="n">137 MPa</td></tr>
+      <tr><td>1 kN·m/rad</td><td class="n">24,8 mm</td><td class="n">2,6 mm</td><td class="n">9,0 mm</td><td class="n">2,3 Hz</td><td class="n">136 MPa</td></tr>
+      <tr><td>0,5 kN·m/rad</td><td class="n">49 mm</td><td class="n">4,7 mm</td><td class="n">17,4 mm</td><td class="n">1,6 Hz</td><td class="n">136 MPa</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>No sentido do comprimento (z) o deslocamento é zero em todas as linhas, porque as cantoneiras seguram as pontas das longarinas. Na largura (x), quem segura são as duas diagonais de tubo, e o que sobra depende da rigidez do nó.</li>
+    <li>Sem cabos, o desempenho passa a depender da rigidez do nó. O limite prático é 2 kN·m/rad: 1,5 mm no meio da lateral e 4,8 mm no canto do pé com 300 N. Abaixo disso o pé balança demais: 9 mm com 1 kN·m/rad e 17 mm com 0,5.</li>
+    <li>O vertical não muda: a queda de 10 cm fica entre 136 e 141 MPa em todas as linhas.</li>
+    <li>As diagonais trabalham pouco: no máximo uns 445 N com um empurrão de 300 N. Cada cantoneira recebe uns 300 N na horizontal, o que 2 parabolts M10 aguentam.</li>
+  </ul>
+  <h3>Teste do nó impresso, antes de montar a cama</h3>
+  <p>Monte um pedaço de poste de 50 cm num nó de base preso na bancada. Pendure 10 kg na ponta e meça a deflexão.</p>
+  <ul>
+    <li>Até 5 mm: nó com 5 kN·m/rad ou mais. Siga o projeto.</li>
+    <li>De 5 a 12 mm: nó entre 2 e 5 kN·m/rad. Ainda serve, e o pé pode balançar uns 2 a 5 mm com um empurrão forte.</li>
+    <li>Mais de 12 mm: o nó é mole demais. Aplique um dos reforços abaixo e repita o teste.</li>
+  </ul>
+  <h3>Reforços do nó, se o teste falhar (sem cabos)</h3>
+  <ul>
+    <li><strong>Colar o tubo no soquete</strong> com epóxi estrutural de dois componentes. Tira a folga de 0,15 mm entre o tubo e o plástico, que é onde o nó perde rigidez. É a medida mais barata, e depois o tubo não sai mais.</li>
+    <li><strong>Soquetes mais fundos:</strong> 120 mm de profundidade no soquete do poste e 100 mm nos braços da base, com 4 parafusos M10 por soquete. Custa mais filamento, uns 1 kg.</li>
+    <li><strong>Chapa de compensado de 15 mm sobre a moldura da base</strong>, pintada de preto. Faz a base trabalhar como uma placa rígida. Na simulação, a base rígida com nós de 2 kN·m/rad nos postes leva o balanço a uns 2,4 mm com 300 N. Não resolvi como prender a chapa nos tubos redondos.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Como as peças se encaixam</h2>
+  <ul>
+    <li><strong>Longarinas e viga central</strong> (3 tubos de 1¼", com 195,6 cm) passam por cima das <strong>travessas</strong> (4 tubos de 1¼", com 148 cm, em z = −95, −10, +80 e +95 cm). Cada tubo prolonga 2,8 cm além do último cruzamento, para o grampo pegar.</li>
+    <li>Nos 12 cruzamentos, uma <strong>sela impressa</strong> fica entre os dois tubos. Ela tem duas metades, cada uma com um sulco de 42,5 mm, uma para cima (longarina) e outra para baixo (travessa), com 6 mm de plástico entre os sulcos. Dois grampos U de 1¼" prendem os tubos à sela e fecham as duas metades: as pernas passam por 4 furos de 8,4 mm que atravessam o bloco. O bloco tem 84 × 84 mm, para as pernas ficarem fora dos sulcos e as porcas assentarem sobre o plástico. Como a longarina e a travessa terminam perto da sela das pontas, o grampo fica sempre do lado do centro da cama, e há 4 tipos de sela, espelhados conforme a posição.</li>
+    <li><strong>Seis postes</strong> de 1¼" descem de colares impressos nas travessas até os nós impressos da base, nas posições x = ±56,5 cm e z = −95, −10 e +80 cm.</li>
+    <li><strong>Base:</strong> duas linhas longitudinais (x = ±56,5 cm) e três travessas (z = −95, −10 e +80 cm), tudo em 1¼". Os nós da base ficam apoiados em pés niveladores de base larga. Duas diagonais de tubo de 1¼", uma em cada painel, travam a moldura da base contra o paralelogramo.</li>
+    <li><strong>Cabeceira:</strong> painel de tubo de 1", com montantes, travessa superior, travessa inferior e zigue-zague de diagonais, preso na parede por 4 abraçadeiras.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Lista de corte dos tubos</h2>
+  <p>Os comprimentos já descontam a parte da ponta que fica dentro de cada conexão (32 mm além do centro do nó, nos tubos retos de 1¼" das bases e postes, 85 mm nas diagonais da base e 25 mm no de 1" da cabeceira, com 70 mm nas diagonais dela). Meça o diâmetro externo do seu tubo com paquímetro antes de cortar e imprimir, e confira o corte com o soquete impresso.</p>
+  <h3>Tubo de 1¼" (42,2 mm)</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Peça</th><th class="n">Qtd</th><th class="n">Corte (cm)</th><th>Onde entra</th></tr></thead>
+    <tbody>
+      <tr><td>Longarina e viga central</td><td class="n">3</td><td class="n">195,6</td><td>Em x = −71,5, 0 e +71,5 cm, a 34,9 cm do piso</td></tr>
+      <tr><td>Travessa do estrado</td><td class="n">4</td><td class="n">148,0</td><td>A 30 cm do piso, sob as longarinas</td></tr>
+      <tr><td>Poste</td><td class="n">6</td><td class="n">20,2</td><td>Do nó da base ao colar da travessa</td></tr>
+      <tr><td>Linha longitudinal da base, trecho da cabeceira</td><td class="n">2</td><td class="n">78,6</td><td>De z = −95 a −10 cm, um de cada lado</td></tr>
+      <tr><td>Linha longitudinal da base, trecho do pé</td><td class="n">2</td><td class="n">83,6</td><td>De z = −10 a +80 cm, um de cada lado</td></tr>
+      <tr><td>Travessa da base</td><td class="n">3</td><td class="n">106,6</td><td>Em z = −95, −10 e +80 cm</td></tr>
+      <tr><td>Diagonal da base</td><td class="n">2</td><td class="n">124,4 e 127,5</td><td>Uma em cada painel da base, de um canto ao meio do lado oposto, com o mesmo sentido nos dois painéis. A ponta fica a 85 mm do centro do nó: a 32 mm o tubo invadia a travessa e a longitudinal</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Tubo de 1" (33,7 mm): cabeceira</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Peça</th><th class="n">Qtd</th><th class="n">Corte (cm)</th><th>Onde entra</th></tr></thead>
+    <tbody>
+      <tr><td>Montante</td><td class="n">2</td><td class="n">39,0</td><td>Entre o cotovelo de cima e o de baixo</td></tr>
+      <tr><td>Travessa superior</td><td class="n">1</td><td class="n">138,0</td><td>A 100 cm do piso</td></tr>
+      <tr><td>Travessa inferior</td><td class="n">1</td><td class="n">138,0</td><td>A 56 cm do piso</td></tr>
+      <tr><td>Diagonal</td><td class="n">4</td><td class="n">42,7</td><td>Zigue-zague, a cerca de 51° do horizontal. Ponta a 70 mm do vértice, para não invadir o montante</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Plano de corte</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Barra</th><th>Peças (cm)</th><th class="n">Usado</th><th class="n">Sobra</th></tr></thead>
+    <tbody>
+      <tr><td>1¼", barra 1</td><td>195,6 × 3</td><td class="n">586,8</td><td class="n">13,2</td></tr>
+      <tr><td>1¼", barra 2</td><td>148 × 4</td><td class="n">592,0</td><td class="n">8,0</td></tr>
+      <tr><td>1¼", barra 3</td><td>106,6 × 3 + 83,6 × 2 + 78,6</td><td class="n">565,6</td><td class="n">34,4</td></tr>
+      <tr><td>1¼", barra 4</td><td>78,6 + 20,2 × 6 + 124,4 + 127,5</td><td class="n">451,7</td><td class="n">148,3</td></tr>
+      <tr><td>1", barra 1</td><td>138 × 2 + 42,7 × 4 + 39 × 2</td><td class="n">524,8</td><td class="n">75,2</td></tr>
+    </tbody>
+  </table></div>
+  <p>Conte cerca de 3 mm de perda por corte. As barras 1 e 2 de 1¼" ficam justas: se a loja vender barras mais curtas que 6 m, compre uma quinta barra. A barra 4 de 1¼" sobra uns 148 cm, que servem para peças de teste.</p>
+</section>
+
+<section>
+  <h2>Peças impressas</h2>
+  <p>Todas cabem folgadas na sua mesa de 22 cm. A maior em planta mede 206 × 190 mm (o nó BM, girado na mesa), e a mais alta tem 112 mm.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Peça</th><th>Descrição</th><th class="n">Peças</th><th class="n">Impressões</th><th class="n">Maior medida de cada metade (mm)</th></tr></thead>
+    <tbody>
+      <tr><td>Sela do cruzamento</td><td>2 metades: a de cima leva o sulco da longarina, e a de baixo, o da travessa. Cada uma imprime com o sulco para cima, sem suporte</td><td class="n">12</td><td class="n">24</td><td class="n">84 × 84 × 24</td></tr>
+      <tr><td>PC, colar do poste na travessa</td><td>2 metades verticais. Anel de 1¼" (parede de 15 mm, raio externo de 36 mm, 60 mm de comprimento) com soquete para o poste de 80 mm de profundidade, para baixo</td><td class="n">6</td><td class="n">12</td><td class="n">60 × 148 × 36</td></tr>
+      <tr><td>BC, canto da base</td><td>2 metades, corte horizontal. A de cima leva o soquete do poste em pé. Braços horizontais de 96 mm (soquetes de 64 mm) para a longarina e a travessa da base. Dois dos quatro cantos levam mais um braço de 153 mm, a uns 37° da travessa, para a diagonal</td><td class="n">4</td><td class="n">8</td><td class="n">125 × 125 no canto liso; 169 × 145 nos com diagonal (a de cima tem 112 de altura)</td></tr>
+      <tr><td>BM, meio da base</td><td>2 metades, corte horizontal. Braços de 96 mm nos dois sentidos da longarina, um para a travessa e o soquete do poste em pé. Os dois levam mais um braço de 153 mm, para a diagonal</td><td class="n">2</td><td class="n">4</td><td class="n">214 × 167 (a de cima tem 112 de altura; sem margem para borda)</td></tr>
+      <tr><td>F, cotovelo superior da cabeceira</td><td>2 metades verticais, montante e travessa superior (1")</td><td class="n">2</td><td class="n">4</td><td class="n">125 × 125 × 23</td></tr>
+      <tr><td>G, canto inferior da cabeceira</td><td>2 metades verticais, montante, travessa inferior e diagonal</td><td class="n">2</td><td class="n">4</td><td class="n">125 × 134 × 23</td></tr>
+      <tr><td>H, colar V superior</td><td>2 metades verticais, na travessa superior, 2 diagonais</td><td class="n">2</td><td class="n">4</td><td class="n">190 × 135 × 23</td></tr>
+      <tr><td>I, colar V inferior</td><td>2 metades verticais, na travessa inferior, 2 diagonais</td><td class="n">1</td><td class="n">2</td><td class="n">190 × 135 × 23</td></tr>
+      <tr><td colspan="3"><strong>Total</strong></td><td class="n"><strong>62</strong></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Medidas dos soquetes de 1¼" (postes e base)</h3>
+  <ul>
+    <li>Diâmetro interno de 42,5 mm para tubo de 42,2 mm, parede de 8 mm (braço de 58,5 mm). Se o seu tubo medir diferente, some 0,3 mm ao medido.</li>
+    <li>Ponta do tubo a 32 mm do centro do nó. Boca do soquete do poste a 112 mm (profundidade de 80 mm) e dos braços horizontais da base a 96 mm (profundidade de 64 mm).</li>
+    <li>Soquete do poste: 3 furos passantes de 10,4 mm (M10), a 50, 70 e 90 mm do centro (a 44 mm a borda do tubo ficaria a só 6,8 mm da ponta). Sem rebaixo: a arruela de aço Ø42 × 5 mm cai pelo furo e fica solta no fundo, a 27 mm do centro. Braços horizontais: 2 furos, a 54 e 80 mm.</li>
+    <li>No colar do poste, o anel tem 2 furos M10 no sentido do corte, a 30 mm acima do eixo da travessa e a 18 mm de cada lado, com rebaixo plano de Ø22 mm para a arruela. O anel tem raio externo de 36 mm: com esse furo a 30 mm do eixo e raio de 30,3 mm, sobrava só 0,8 mm de casca em cima e o furo abria para fora.</li>
+    <li>As arruelas assentam em rasgos planos, e não na parede curva: os braços da base têm um rasgo de 20 mm de largura em cima e embaixo (a 27,5 mm do eixo), os soquetes de 1" um de 19,6 mm, e o anel do colar PC um rebaixo redondo de Ø22 mm. Use arruelas lisas ISO 7089 (Ø20 nos M10, Ø16 nos M8 e Ø12 nos M6).</li>
+    <li>Braço da diagonal nos nós da base: mais longo que os horizontais. A ponta do tubo fica a 85 mm do centro, a boca do soquete a 153 mm (profundidade de 68 mm) e os 2 furos M10 a 103 e 129 mm. Painel da cabeceira: 37,0° da travessa. Painel do pé: 38,5°.</li>
+    <li>Fundo do nó da base: rasgo plano no fundo e furo de Ø8,5 mm por 20 mm de fundo, para um inserto de latão M8 (ou uma porca M8 com trava-rosca) do pé nivelador. O fundo do nó fica a 4,75 mm do piso, então as porcas de baixo só se alcançam com a base sobre cavaletes.</li>
+    <li>Os canais dos tubos têm o teto em "gota": semicírculo de 42,5 mm (34 mm nos de 1") com um telhado a 45° e um trecho plano de 15 mm (12 mm nos de 1"). Um arco perfeito pediria suporte dentro do soquete, e as marcas do suporte estragariam a folga de 0,15 mm. O tubo se apoia nos flancos a 45°.</li>
+    
+  </ul>
+  <h3>Regras de impressão</h3>
+  <ul>
+    <li>Cada metade se encaixa com pinos de aço de 4 mm por 20 mm, em furos de 4,2 mm com 10 mm de fundo em cada metade: 4 por nó da base, 3 por colar PC, 2 por sela e 1 a 2 nos nós da cabeceira. Não há lingueta. Os parafusos passantes (e, nas selas, as pernas dos grampos U) fecham tudo.</li>
+    <li>PETG no mínimo, ASA se possível. Camadas de 0,2 mm, 8 perímetros e preenchimento de 40% (ou 6 perímetros e 25% na versão leve). Não use PLA em peça estrutural.</li>
+    <li>Imprima primeiro as duas peças de teste do pacote de STL (soquete de 1¼" e de 1"), para conferir o tubo, o parafuso e o encaixe das metades. Depois, uma sela, um colar PC e uma metade de BC.</li>
+  </ul>
+  <h3>Filamento (PETG)</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Grupo</th><th class="n">Massa por peça</th><th class="n">8 perímetros, 40%</th><th class="n">Leve: 6 perímetros, 25%</th></tr></thead>
+    <tbody>
+      <tr><td>12 selas (24 metades)</td><td class="n">258 g</td><td class="n">3,1 kg</td><td class="n">2,5 kg</td></tr>
+      <tr><td>6 colares PC</td><td class="n">294 g</td><td class="n">1,8 kg</td><td class="n">1,4 kg</td></tr>
+      <tr><td>4 cantos BC (2 com braço de diagonal)</td><td class="n">502 g ou 685 g</td><td class="n">2,4 kg</td><td class="n">1,9 kg</td></tr>
+      <tr><td>2 meios BM (com braço de diagonal)</td><td class="n">805 g</td><td class="n">1,6 kg</td><td class="n">1,3 kg</td></tr>
+      <tr><td>Cabeceira (F, G, H, I)</td><td class="n">várias</td><td class="n">2,6 kg</td><td class="n">2,1 kg</td></tr>
+      <tr class="ok"><td><strong>Total</strong></td><td></td><td class="n"><strong>11,4 kg</strong></td><td class="n"><strong>9,2 kg</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p>Estimativa por volume dos sólidos dos STL (paredes de 8 × 0,45 mm nos furos e nas faces, mais 5% para saia e purga). Os grupos somam 11,5 kg por arredondamento. As estimativas anteriores, de 7,1 kg, e a de 8,8 kg de uma rodada intermediária, estavam otimistas: os soquetes e furos de verdade acrescentam muita parede. Confirme fatiando a maior peça. Com ASA (1,07 g/cm³), os totais caem uns 16%. Para comparar: o projeto do cubo pedia uns 18 kg.</p>
+</section>
+
+<section>
+  <h2>Ferragens e madeira</h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Item</th><th class="n">Qtd</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td>Parafuso M10 × 80 mm, aço zincado, classe 8.8</td><td class="n">80</td><td>72 previstos: 36 nos braços horizontais da base, 18 nos soquetes dos postes da base e 18 nos dos colares, com reserva. Arruela lisa de Ø20 e porca autotravante nos dois lados. A conta: 55 mm entre os rebaixos + 2 × 2 das arruelas + 10 da porca + 3 de rosca = 72 mm</td></tr>
+      <tr><td>Parafuso M10 × 55 mm, aço zincado, classe 8.8</td><td class="n">14</td><td>2 por anel de colar PC (12), com reserva. Arruela lisa de Ø20 e porca autotravante. A conta: 34 mm entre os rebaixos + 2 × 2 + 10 + 3 = 51 mm</td></tr>
+      <tr><td>Arruela de aço, Ø42 mm × 5 mm</td><td class="n">12</td><td>Solta no fundo de cada soquete de poste (6 nos colares e 6 nos nós da base). Cai pelo furo de 42,5 mm. Corte em serralheria</td></tr>
+      <tr><td>Pé nivelador com rosca M8 e base de Ø 40 mm</td><td class="n">6</td><td>Sob os nós da base. Com inserto de latão M8 em cada nó</td></tr>
+      <tr><td>Grampo U de 1¼" com M8 e porca autotravante</td><td class="n">24</td><td>2 por cruzamento (12 cruzamentos). Pernas de 65 mm ou mais abaixo do arco, que atravessam a sela (a conta pede 62,7 mm). Mais 48 arruelas lisas e 48 porcas autotravantes M8</td></tr>
+      <tr><td>Parafuso M8 × 65 mm com porca autotravante</td><td class="n">46</td><td>40 previstos na cabeceira: 3 por soquete reto e 2 por soquete de diagonal. A conta: 47 mm entre os rebaixos + 2 × 1,6 + 8 + 1,5 = 59,7 mm</td></tr>
+      <tr><td>Parafuso M6 × 40 mm com porca autotravante</td><td class="n">8</td><td>2 por colar H e I da cabeceira (6), com reserva</td></tr>
+      <tr><td>Cantoneira de aço 40 × 40 × 4 mm, 6 cm de largura, com grampo U de 1¼"</td><td class="n">2</td><td>Prende o fim de cada longarina à parede, contra arrancamento</td></tr>
+      <tr><td>Abraçadeira de parede para tubo de 1"</td><td class="n">4</td><td>2 por montante da cabeceira, a 65 e 90 cm do piso</td></tr>
+      <tr><td>Parabolt M10 (ou chumbador químico)</td><td class="n">12</td><td>8 nas abraçadeiras da cabeceira (2 cada) e 4 nas cantoneiras (2 cada)</td></tr>
+      <tr><td>Ripa de pinus tratado ou eucalipto, 145 × 7 × 2,5 cm</td><td class="n">17</td><td>Em três grupos: 8, 8 e 1, com vão maior em volta dos cruzamentos em z = −10 e +80 cm. Onde uma ripa passa sobre um grampo U, faça um entalhe de 55 × 10 mm na face de baixo</td></tr>
+      <tr><td>Parafuso autobrocante 4,2 × 38 mm</td><td class="n">55</td><td>3 por ripa: uma em cada longarina e uma na viga central</td></tr>
+      <tr><td>Pino de aço de 4 mm × 20 mm</td><td class="n">80</td><td>77 previstos: 4 por nó da base (24), 3 por colar PC (18), 2 por sela (24), 2 por nó F e G (8) e 1 por nó H e I (3), mais reserva</td></tr>
+      <tr><td>Verniz spray incolor</td><td class="n">3 latas</td><td>3 a 4 demãos nos tubos. Se for pintar de preto, use primer para galvanizado</td></tr>
+      <tr><td>Feltro ou borracha de 5 mm</td><td class="n">1 m</td><td>Entre as ripas e os tubos, para amortecer</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Fixação na parede</h2>
+  <p>Bucha de nylon de 10 mm não serve. Use parabolt M10 (ou chumbador químico) em concreto ou tijolo maciço. Em bloco cerâmico furado, use chumbador químico com tela ou barra roscada atravessando a parede. Confira a carga admissível no catálogo do fabricante.</p>
+  <ul>
+    <li><strong>Cabeceira:</strong> o painel de tubo (143 × 44 cm, uns 12 kg) prende com 4 abraçadeiras, 2 por montante, com 2 parabolts M10 cada. Ele só sustenta o próprio peso e nunca recebe carga da cama.</li>
+    <li><strong>Estrado:</strong> duas cantoneiras seguram a ponta de cada longarina para baixo, contra o arrancamento de 0,64 kN no máximo, quando alguém sente no canto do pé, e também na horizontal, no sentido do comprimento. Elas recebem uns 300 N na horizontal por empurrão de 300 N. Cada cantoneira leva 2 parabolts e um grampo U que envolve a longarina, sem folga.</li>
+    <li>A parede do lado da cabeceira fica a uns 3,5 cm do painel e a menos de 1 cm da ponta das longarinas.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Montagem</h2>
+  <p><strong>Montagem em 3D, etapa por etapa:</strong> <a href="https://claude.ai/artifact/Wxi5ZHL5q9pqcmowEHJeMv">abra a animação com encaixes e parafusos</a>. Ao modelar as peças e conferir cada encaixe, a simulação corrigiu vários pontos deste projeto (comprimento e posição dos parafusos, arruela do soquete, ponta das diagonais, tamanho da sela e do anel do colar). O texto desta página já traz os valores corrigidos, e os arquivos STL (pacote pecas_impressas_STL.zip) e os GLB seguem o mesmo projeto. O modelo 3D desta página, mais acima, ainda desenha selas, colares e braços das diagonais com as medidas anteriores.</p>
+  <ol class="steps">
+    <li>Descubra o material da parede e do piso e escolha as fixações certas.</li>
+    <li>Corte os tubos, tire as rebarbas, limpe o óleo de fábrica com desengordurante e aplique o verniz. Deixe curar antes de encaixar.</li>
+    
+    <li>Imprima os dois testes de soquete (peças 90 e 91) e um nó BC sem diagonal. Confira o tubo, os furos e os pinos e faça o teste de rigidez do nó (seção anterior) antes de imprimir o resto.</li>
+    <li>Monte a base sobre dois cavaletes de uns 40 cm, ou sobre uma mesa, para alcançar as porcas por baixo: metades inferiores dos nós, tubos deitados nos canais (diagonais incluídas), metades superiores, arruelas Ø42 × 5 mm nos soquetes dos postes e os parafusos M10 × 80 dos braços. Só então rosqueie os pés niveladores, ponha a moldura no piso e nivele com nível de bolha.</li>
+    <li>Monte o estrado ao lado, de cabeça para baixo ou apoiado em cavaletes: as quatro travessas, as três longitudinais por cima delas e as selas nos 12 cruzamentos. Aperte os grampos U só depois de conferir o esquadro.</li>
+    <li>Prenda os 6 colares PC nas travessas e encaixe os postes.</li>
+    <li>Levante o estrado com uma segunda pessoa e encaixe os postes nos nós da base. Aperte todos os parafusos de fixação.</li>
+    <li>Monte a cabeceira deitada no chão: montantes, travessas, diagonais e nós impressos, com os furos feitos já montados. Fixe na parede com as abraçadeiras.</li>
+    <li>Fixe as cantoneiras na parede, com o grampo U em volta da ponta de cada longarina.</li>
+    <li>Faça as ripas com feltro por baixo e parafuse-as nos tubos, deixando livres as faixas dos cruzamentos.</li>
+    <li>Empurre o estrado de lado com 30 kgf. Se o deslocamento passar de 5 mm no canto do pé, aplique os reforços do nó da seção de rigidez.</li>
+    <li>Faça o teste de carga abaixo antes de usar.</li>
+  </ol>
+
+  <h3>Teste de carga físico</h3>
+  <p>Coloque sobre o estrado o dobro do peso das pessoas que vão usar a cama (sacos de areia ou de cimento distribuídos) e deixe por 24 horas. Depois procure selas trincadas, grampos frouxos, parafusos soltos, postes deslocados e buchas que tenham cedido. Sente com 120 kg no canto do pé e confira: a flecha deve ficar abaixo de 2 mm e o canto oposto não deve levantar do piso. Repita a checagem dos parafusos depois de uma semana e a cada três meses.</p>
+</section>
+
+<section>
+  <h2>Limites e melhorias</h2>
+  <div class="note">Este é um projeto de partida com simulação simplificada, sem análise de engenharia. A resistência final depende da parede, do piso, dos nós impressos, do filamento, da calibração da impressora e da montagem. Vale uma segunda opinião de quem entende de estruturas, principalmente para os nós dos postes e da base.</div>
+  <ul>
+    <li>Sem as cantoneiras na cabeceira, o lado oposto do estrado levanta do piso quando alguém senta na ponta do pé. O arrancamento chega a 0,64 kN no caso de abuso.</li>
+    <li>A cama depende do peso morto para ficar no piso. Um colchão pesado ajuda, e se quiser mais margem, o caminho é reduzir o recuo do pé para 10 cm (a tensão cai de 59% para 51%).</li>
+    <li>Nó impresso semirrígido pede diagonais no plano da base e as cantoneiras chumbadas. Sem as diagonais, a cama balança 33 mm com um empurrão de 300 N. Não dispense as 2 diagonais de tubo nem as cantoneiras.</li>
+    <li>PETG começa a amolecer perto de 75 °C. Evite sol forte direto. Em ambiente muito quente, prefira ASA. Confira os nós e as arruelas a cada três meses e reimprima se aparecer deformação.</li>
+    <li>Melhorias que não testei: contraventamento em X com tubo no plano do estrado, chapa de compensado de 15 mm sob o colchão no lugar de parte das ripas, e extensômetros para medir a flecha real.</li>
+    <li>Este projeto foi pensado para casal, com uso normal. Não é uma cama para pular. Para outro tamanho de colchão, peça que eu recalcule.</li>
+  </ul>
+</section>
+
+<footer>O modelo 3D é um desenho esquemático feito para conferir proporções e a lógica da montagem. Ele usa a biblioteca three.js.</footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var nogl=document.getElementById('nogl');
+  if(!window.THREE){nogl.hidden=false;return;}
+  var renderer;
+  try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});}
+  catch(e){nogl.hidden=false;return;}
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  stage.insertBefore(renderer.domElement,stage.firstChild);
+  var el=renderer.domElement;
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(35,1,5,3000);
+
+  scene.add(new THREE.HemisphereLight(0xffffff,0x8a939a,0.85));
+  var sun=new THREE.DirectionalLight(0xffffff,0.95);
+  sun.position.set(190,330,250);
+  sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.camera.left=-260;sun.shadow.camera.right=260;
+  sun.shadow.camera.top=260;sun.shadow.camera.bottom=-260;
+  sun.shadow.camera.near=50;sun.shadow.camera.far=900;
+  sun.shadow.bias=-0.0006;
+  scene.add(sun);
+  var fill=new THREE.DirectionalLight(0xbfd4ff,0.4);
+  fill.position.set(-250,150,-200);
+  scene.add(fill);
+  var under=new THREE.DirectionalLight(0xffffff,0.35);
+  under.position.set(0,-200,120);
+  scene.add(under);
+
+  var floorMat=new THREE.MeshStandardMaterial({color:0xd3dbe0,roughness:1});
+  var floor=new THREE.Mesh(new THREE.CircleGeometry(420,72),floorMat);
+  floor.rotation.x=-Math.PI/2;floor.position.y=-0.05;floor.receiveShadow=true;
+  scene.add(floor);
+
+  var WALLZ=-98.5;
+  var wallMat=new THREE.MeshStandardMaterial({color:0xe6e2da,roughness:1});
+  var wall=new THREE.Mesh(new THREE.BoxGeometry(340,260,4),wallMat);
+  wall.position.set(0,130,WALLZ-2);wall.receiveShadow=true;
+  scene.add(wall);
+
+  function isDark(){
+    var t=document.documentElement.getAttribute('data-theme');
+    if(t==='dark')return true;if(t==='light')return false;
+    return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function paintScene(){
+    var d=isDark();
+    floorMat.color.setHex(d?0x243039:0xd3dbe0);
+    wallMat.color.setHex(d?0x2f3a43:0xe6e2da);
+  }
+  paintScene();
+  if(window.matchMedia){
+    var mq=window.matchMedia('(prefers-color-scheme: dark)');
+    if(mq.addEventListener)mq.addEventListener('change',paintScene);
+  }
+
+  /* medidas em cm */
+  var P={R1:1.685,R2:2.11,X:71.5,XP:56.5,YR:34.85,YG:30.0,YB:3.4,YT:100,YL:56,ED:4.0};
+  var R1=P.R1,R2=P.R2,X=P.X,XP=P.XP,YR=P.YR,YG=P.YG,YB=P.YB,YT=P.YT,YL=P.YL;
+  var ZG=[-95,-10,80,95],ZP=[-95,-10,80];
+  var V=function(x,y,z){return new THREE.Vector3(x,y,z);};
+  var UP=new THREE.Vector3(0,1,0);
+
+  var mat={
+    galv:new THREE.MeshPhongMaterial({color:0xb4bcc4,specular:0xffffff,shininess:85}),
+    blk:new THREE.MeshPhongMaterial({color:0x1d2024,specular:0x666666,shininess:55}),
+    print:new THREE.MeshStandardMaterial({color:0xe8650f,roughness:0.55,metalness:0}),
+    fit:new THREE.MeshPhongMaterial({color:0x5c646d,specular:0x888888,shininess:60}),
+    bolt:new THREE.MeshPhongMaterial({color:0x2e3136,specular:0x999999,shininess:60}),
+    hw:new THREE.MeshPhongMaterial({color:0x3a3f45,specular:0x777777,shininess:50,side:THREE.DoubleSide}),
+    wood:new THREE.MeshStandardMaterial({color:0xc99a62,roughness:0.85}),
+    mattress:new THREE.MeshStandardMaterial({color:0xf3f1ea,roughness:0.95})
+  };
+
+  var bed=new THREE.Group();scene.add(bed);
+  var gTube=new THREE.Group(),gBase=new THREE.Group(),gNode=new THREE.Group(),gBolt=new THREE.Group(),
+      gWood=new THREE.Group(),gMat=new THREE.Group(),gHw=new THREE.Group();
+  [gTube,gBase,gNode,gBolt,gWood,gMat,gHw].forEach(function(g){bed.add(g);});
+  var tubeMeshes=[],nodeMeshes=[];
+  var state={finish:'galv',hl:true};
+
+  function cyl(a,b,r,material,seg){
+    var d=b.clone().sub(a),L=d.length();
+    var m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,seg||28),material);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(UP,d.normalize());
+    m.castShadow=true;m.receiveShadow=true;
+    return m;
+  }
+  function ring(a,b,r){
+    var d=b.clone().sub(a),L=d.length();
+    var m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,28,1,true),mat.hw);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(UP,d.normalize());
+    m.castShadow=true;
+    return m;
+  }
+  function box(w,h,d,x,y,z,material){
+    var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+    m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;
+    return m;
+  }
+  function tube(a,b,r,grp){var m=cyl(a,b,r,mat.galv);(grp||gTube).add(m);tubeMeshes.push(m);}
+  function addPrint(m,grp){(grp||gNode).add(m);nodeMeshes.push(m);}
+
+  function bolt(p,dir,r,rad,grp){
+    var g=grp||gBolt;
+    var ax=new THREE.Vector3().crossVectors(dir,UP);
+    if(ax.length()<0.1)ax.set(1,0,0);
+    ax.normalize();
+    var h=rad+0.55;
+    var a=p.clone().addScaledVector(ax,-h),b=p.clone().addScaledVector(ax,h);
+    g.add(cyl(a,b,r,mat.bolt,10));
+    g.add(cyl(p.clone().addScaledVector(ax,h-0.05),p.clone().addScaledVector(ax,h+0.5),r*2.3,mat.bolt,6));
+    g.add(cyl(p.clone().addScaledVector(ax,-h+0.05),p.clone().addScaledVector(ax,-h-0.5),r*2.3,mat.bolt,6));
+  }
+
+  /* --- peças impressas 1" da cabeceira --- */
+  var S1A={r:2.5,len:10,ts:[4.2,6.2,8.2],br:0.4};
+  var SD={r:2.5,len:10,ts:[5.5,8.5],br:0.3};
+  function pArm(c,dir,s){
+    var d=dir.clone().normalize();
+    addPrint(cyl(c,c.clone().addScaledVector(d,s.len),s.r,mat.print,32));
+    s.ts.forEach(function(t){bolt(c.clone().addScaledVector(d,t),d,s.br,s.r);});
+  }
+  function pNode(c,arms){
+    var s=new THREE.Mesh(new THREE.SphereGeometry(2.5,24,16),mat.print);
+    s.position.copy(c);s.castShadow=true;addPrint(s);
+    arms.forEach(function(a){pArm(c,a[0],a[1]);});
+  }
+  function pCollar(c,axis,socks){
+    var ax=axis.clone().normalize();
+    addPrint(cyl(c.clone().addScaledVector(ax,-2.8),c.clone().addScaledVector(ax,2.8),2.65,mat.print,36));
+    socks.forEach(function(s){pArm(c,s.dir,s.spec);});
+  }
+
+  /* --- nós impressos de 1 1/4" (postes e base) --- */
+  var QR=2.925;
+  var Q2={ts:[4.4,6.6,8.8],br:0.5};      /* soquete do poste: boca a 112 mm */
+  var QH={ts:[5.0,7.6],br:0.5};          /* braços horizontais da base: boca a 100 mm */
+  function qArm(c,dir,len,spec){
+    var d=dir.clone().normalize();
+    addPrint(cyl(c,c.clone().addScaledVector(d,len),QR,mat.print,32),gBase);
+    spec.ts.forEach(function(t){bolt(c.clone().addScaledVector(d,t),d,spec.br,QR,gBase);});
+  }
+  function qNode(c,arms){
+    var sp=new THREE.Mesh(new THREE.SphereGeometry(QR,24,16),mat.print);
+    sp.position.copy(c);sp.castShadow=true;addPrint(sp,gBase);
+    arms.forEach(function(a){qArm(c,a[0],a[1],a[2]);});
+  }
+
+  var DOWN=V(0,-1,0),UPV=V(0,1,0);
+
+  /* estrado: longarinas e viga central (camada de cima), travessas (camada de baixo) */
+  [-X,0,X].forEach(function(x){tube(V(x,YR,-97.8),V(x,YR,97.8),R2);});
+  ZG.forEach(function(z){tube(V(-74,YG,z),V(74,YG,z),R2);});
+
+  /* selas impressas e grampos U nos 12 cruzamentos */
+  [-X,0,X].forEach(function(x){
+    ZG.forEach(function(z){
+      addPrint(box(6.2,(YR-YG)/2,6.2,x,YG+(YR-YG)/4,z,mat.print));
+      addPrint(box(6.2,(YR-YG)/2,6.2,x,YR-(YR-YG)/4,z,mat.print));
+      gHw.add(ring(V(x,YR,z+3.9),V(x,YR,z+5.0),R2+0.55));
+      gHw.add(ring(V(x+3.9,YG,z),V(x+5.0,YG,z),R2+0.55));
+    });
+  });
+
+  /* direções das diagonais de tubo da base (uma por painel, no mesmo sentido) */
+  var dg1=V(2*XP,0,ZP[1]-ZP[0]).normalize();
+  var dg2=V(2*XP,0,ZP[2]-ZP[1]).normalize();
+
+  /* postes, colares PC e nós da base (BC e BM), todos impressos */
+  [-1,1].forEach(function(s){
+    var x=s*XP;
+    ZP.forEach(function(z,i){
+      /* colar PC: anel em volta da travessa e soquete para o poste, para baixo */
+      var cc=V(x,YG,z);
+      addPrint(cyl(V(x-3.0,YG,z),V(x+3.0,YG,z),3.03,mat.print,36),gBase);
+      qArm(cc,DOWN,11.2,Q2);
+      [-1.8,1.8].forEach(function(o){bolt(V(x+o,YG+2.5,z),V(1,0,0),0.5,3.0,gBase);});
+      tube(V(x,YG-3.2,z),V(x,YB+3.2,z),R2,gBase);
+      /* nó da base */
+      var arms=[[UPV,11.2,Q2],[V(-s,0,0),10.0,QH]];
+      if(i===0)arms.push([V(0,0,1),10.0,QH]);
+      else if(i===ZP.length-1)arms.push([V(0,0,-1),10.0,QH]);
+      else {arms.push([V(0,0,1),10.0,QH]);arms.push([V(0,0,-1),10.0,QH]);}
+      if(s===-1&&i===0)arms.push([dg1.clone(),10.0,QH]);
+      if(s===-1&&i===1)arms.push([dg2.clone(),10.0,QH]);
+      if(s===1&&i===1)arms.push([dg1.clone().negate(),10.0,QH]);
+      if(s===1&&i===2)arms.push([dg2.clone().negate(),10.0,QH]);
+      qNode(V(x,YB,z),arms);
+      gBase.add(cyl(V(x,0,z),V(x,0.5,z),2.6,mat.hw,24));
+    });
+    for(var i=0;i<ZP.length-1;i++){
+      tube(V(x,YB,ZP[i]+3.2),V(x,YB,ZP[i+1]-3.2),R2,gBase);
+    }
+  });
+  ZP.forEach(function(z){tube(V(-XP+3.2,YB,z),V(XP-3.2,YB,z),R2,gBase);});
+
+  /* diagonais de tubo no plano da base (2) */
+  var gDiag=new THREE.Group();bed.add(gDiag);
+  tube(V(-XP,YB,ZP[0]).add(dg1.clone().multiplyScalar(3.2)),V(XP,YB,ZP[1]).sub(dg1.clone().multiplyScalar(3.2)),R2,gDiag);
+  tube(V(-XP,YB,ZP[1]).add(dg2.clone().multiplyScalar(3.2)),V(XP,YB,ZP[2]).sub(dg2.clone().multiplyScalar(3.2)),R2,gDiag);
+
+  /* cabeceira em painel, presa na parede */
+  var HZ=-95;
+  var VX=X/2,VDY=YT-YL,VL=Math.sqrt(VX*VX+VDY*VDY),ux=VX/VL,uy=VDY/VL;
+  [-1,1].forEach(function(s){
+    tube(V(s*X,YL+2.5,HZ),V(s*X,YT-2.5,HZ),R1);
+    pNode(V(s*X,YT,HZ),[[DOWN,S1A],[V(-s,0,0),S1A]]);
+    pCollar(V(s*X,YL,HZ),UPV,[
+      {dir:V(-s,0,0),spec:S1A},
+      {dir:V(-s*ux,uy,0),spec:SD}
+    ]);
+  });
+  [YT,YL].forEach(function(y){tube(V(-X+2.5,y,HZ),V(X-2.5,y,HZ),R1);});
+  var pts=[[-X,YL],[-VX,YT],[0,YL],[VX,YT],[X,YL]];
+  for(var i=0;i<4;i++){
+    var a=pts[i],b=pts[i+1];
+    var dx=(b[0]-a[0])/VL,dy=(b[1]-a[1])/VL;
+    tube(V(a[0]+dx*P.ED,a[1]+dy*P.ED,HZ),V(b[0]-dx*P.ED,b[1]-dy*P.ED,HZ));
+  }
+  [-VX,VX].forEach(function(x){
+    pCollar(V(x,YT,HZ),V(1,0,0),[
+      {dir:V(-ux,-uy,0),spec:SD},
+      {dir:V(ux,-uy,0),spec:SD}
+    ]);
+  });
+  pCollar(V(0,YL,HZ),V(1,0,0),[
+    {dir:V(-ux,uy,0),spec:SD},
+    {dir:V(ux,uy,0),spec:SD}
+  ]);
+
+  /* suportes de parede */
+  [-1,1].forEach(function(s){
+    var x=s*X;
+    [65,90].forEach(function(yy){
+      gHw.add(ring(V(x,yy-1.2,HZ),V(x,yy+1.2,HZ),R1+0.55));
+      gHw.add(box(5,2.4,0.5,x,yy,WALLZ+0.25,mat.hw));
+      gHw.add(box(3,2.4,0.9,x,yy,-97.55,mat.hw));
+      [-2,2].forEach(function(o){gHw.add(cyl(V(x+o,yy,WALLZ+0.5),V(x+o,yy,WALLZ+0.95),0.6,mat.bolt,10));});
+    });
+    /* cantoneira que segura o fim da longarina */
+    gHw.add(box(6,5,0.5,x,YR,WALLZ+0.25,mat.hw));
+    gHw.add(box(4,3.6,1.6,x,YR,-97.6,mat.hw));
+    gHw.add(ring(V(x,YR,-97.6),V(x,YR,-96.2),R2+0.6));
+    [-2,2].forEach(function(o){gHw.add(cyl(V(x+o,YR,WALLZ+0.5),V(x+o,YR,WALLZ+0.95),0.6,mat.bolt,10));});
+  });
+
+  /* ripas: 17, em 3 grupos, com folga nos cruzamentos de z=-10 e z=80 */
+  var slatTop=YR+R2;
+  function slat(z){gWood.add(box(145,2.5,7,0,slatTop+1.25,z,mat.wood));}
+  function slatSeg(a,b,n){
+    var clr=1.5,gap=n>1?((b-a)-2*clr-n*7)/(n-1):0;
+    for(var k=0;k<n;k++){slat(a+clr+3.5+k*(7+gap));}
+  }
+  slatSeg(-92,-14,8);
+  slatSeg(-6,76,8);
+  slat(88);
+
+  var mt=new THREE.Mesh(new THREE.BoxGeometry(138,20,188),mat.mattress);
+  mt.position.set(0,slatTop+2.5+10,-0.5);
+  mt.castShadow=true;mt.receiveShadow=true;gMat.add(mt);
+
+  function applyMaterials(){
+    var tm=state.finish==='galv'?mat.galv:mat.blk;
+    tubeMeshes.forEach(function(m){m.material=tm;});
+    nodeMeshes.forEach(function(m){m.material=state.hl?mat.print:tm;});
+  }
+  applyMaterials();
+
+  var views={
+    persp:{t:0.8,p:1.32,r:470},
+    pe:{t:0,p:1.42,r:480},
+    lado:{t:Math.PI/2,p:1.5,r:520},
+    baixo:{t:0.7,p:1.95,r:400},
+    topo:{t:0,p:0.06,r:500}
+  };
+  var target=V(0,38,-3);
+  var cur={t:views.persp.t,p:views.persp.p,r:views.persp.r};
+  var goal={t:cur.t,p:cur.p,r:cur.r};
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function place(){
+    camera.position.set(
+      target.x+cur.r*Math.sin(cur.p)*Math.sin(cur.t),
+      target.y+cur.r*Math.cos(cur.p),
+      target.z+cur.r*Math.sin(cur.p)*Math.cos(cur.t));
+    camera.lookAt(target);
+  }
+  function resize(){
+    var w=stage.clientWidth,h=stage.clientHeight;
+    if(!w||!h)return;
+    renderer.setSize(w,h);
+    camera.aspect=w/h;
+    camera.fov=camera.aspect<0.85?54:35;
+    camera.updateProjectionMatrix();
+  }
+  if(window.ResizeObserver){new ResizeObserver(resize).observe(stage);}
+  window.addEventListener('resize',resize);
+  resize();
+
+  var ptrs=new Map(),lastDist=0;
+  function pdist(){var a=Array.from(ptrs.values());var dx=a[0].x-a[1].x,dy=a[0].y-a[1].y;return Math.sqrt(dx*dx+dy*dy)||1;}
+  el.addEventListener('pointerdown',function(e){
+    try{el.setPointerCapture(e.pointerId);}catch(_){}
+    ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ptrs.size===2)lastDist=pdist();
+  });
+  el.addEventListener('pointermove',function(e){
+    var p=ptrs.get(e.pointerId);if(!p)return;
+    var dx=e.clientX-p.x,dy=e.clientY-p.y;
+    p.x=e.clientX;p.y=e.clientY;
+    if(ptrs.size===1){
+      goal.t-=dx*0.007;goal.p=clamp(goal.p-dy*0.006,0.05,1.95);
+      cur.t=goal.t;cur.p=goal.p;clearPressed();
+    }else if(ptrs.size===2){
+      var d=pdist();
+      goal.r=clamp(goal.r*lastDist/d,130,900);cur.r=goal.r;lastDist=d;
+    }
+  });
+  function up(e){ptrs.delete(e.pointerId);if(ptrs.size===1)lastDist=0;}
+  el.addEventListener('pointerup',up);
+  el.addEventListener('pointercancel',up);
+  el.addEventListener('wheel',function(e){
+    e.preventDefault();
+    goal.r=clamp(goal.r*Math.exp(e.deltaY*0.001),130,900);cur.r=goal.r;
+  },{passive:false});
+
+  var viewBtns=document.querySelectorAll('#views button');
+  function clearPressed(){viewBtns.forEach(function(b){b.setAttribute('aria-pressed','false');});}
+  viewBtns.forEach(function(b){
+    b.addEventListener('click',function(){
+      var v=views[b.getAttribute('data-view')];
+      goal.t=v.t;goal.p=v.p;goal.r=v.r;
+      var d=goal.t-cur.t;while(d>Math.PI){goal.t-=2*Math.PI;d=goal.t-cur.t;}while(d<-Math.PI){goal.t+=2*Math.PI;d=goal.t-cur.t;}
+      clearPressed();b.setAttribute('aria-pressed','true');
+    });
+  });
+  var finBtns=document.querySelectorAll('#finish button');
+  finBtns.forEach(function(b){
+    b.addEventListener('click',function(){
+      state.finish=b.getAttribute('data-finish');
+      finBtns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      applyMaterials();
+    });
+  });
+  document.getElementById('tHl').addEventListener('change',function(e){state.hl=e.target.checked;applyMaterials();});
+  document.getElementById('tBase').addEventListener('change',function(e){gBase.visible=e.target.checked;});
+  document.getElementById('tCab').addEventListener('change',function(e){gDiag.visible=e.target.checked;});
+  document.getElementById('tSlat').addEventListener('change',function(e){gWood.visible=e.target.checked;});
+  document.getElementById('tMat').addEventListener('change',function(e){gMat.visible=e.target.checked;});
+  document.getElementById('tBolt').addEventListener('change',function(e){gBolt.visible=e.target.checked;});
+  document.getElementById('tWall').addEventListener('change',function(e){wall.visible=e.target.checked;});
+
+  function tick(){
+    var k=0.12;
+    cur.t+=(goal.t-cur.t)*k;cur.p+=(goal.p-cur.p)*k;cur.r+=(goal.r-cur.r)*k;
+    place();
+    renderer.render(scene,camera);
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+</body>
+</html>

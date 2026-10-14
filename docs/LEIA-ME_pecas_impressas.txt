@@ -1,0 +1,68 @@
+PEÇAS IMPRESSAS DA CAMA FLUTUANTE: ARQUIVOS STL
+============================================================
+
+Unidade: milímetros. Cada arquivo já está orientado para imprimir com a face de corte apoiada na mesa. Não gire. Não precisa de suporte.
+O sufixo _xN do nome é a quantidade de impressões desse arquivo. Total: 62 impressões.
+Cada nó impresso é feito de duas metades, e o STL é de UMA metade.
+
+LISTA DE IMPRESSÃO  (arquivo | quantidade | tamanho X x Y x altura | onde entra)
+----------------------------------------------------------------------------------------------------
+SELAS DOS CRUZAMENTOS (12 selas = 24 metades). O grampo U da travessa fica no lado x indicado e o da longarina no lado z indicado.
+01_sela_tipo1_superior_x6.stl              x6      84 x  84 x  24 mm   x = 0 e x = +71,5, em z = −95, −10 e +80 cm (grampo da travessa em −x, o da longarina em +z)
+02_sela_tipo1_inferior_x6.stl              x6      84 x  84 x  24 mm   x = 0 e x = +71,5, em z = −95, −10 e +80 cm (grampo da travessa em −x, o da longarina em +z)
+03_sela_tipo2_superior_x2.stl              x2      84 x  84 x  24 mm   x = 0 e x = +71,5, em z = +95 cm (grampo da travessa em −x, o da longarina em −z)
+04_sela_tipo2_inferior_x2.stl              x2      84 x  84 x  24 mm   x = 0 e x = +71,5, em z = +95 cm (grampo da travessa em −x, o da longarina em −z)
+05_sela_tipo3_superior_x3.stl              x3      84 x  84 x  24 mm   x = −71,5, em z = −95, −10 e +80 cm (grampo da travessa em +x, o da longarina em +z)
+06_sela_tipo3_inferior_x3.stl              x3      84 x  84 x  24 mm   x = −71,5, em z = −95, −10 e +80 cm (grampo da travessa em +x, o da longarina em +z)
+07_sela_tipo4_superior_x1.stl              x1      84 x  84 x  24 mm   x = −71,5, em z = +95 cm (grampo da travessa em +x, o da longarina em −z)
+08_sela_tipo4_inferior_x1.stl              x1      84 x  84 x  24 mm   x = −71,5, em z = +95 cm (grampo da travessa em +x, o da longarina em −z)
+
+COLARES DO POSTE NA TRAVESSA (6 colares = 12 metades). A metade da frente e a de trás são a mesma peça, girada 180°.
+09_colar_PC_x12.stl                        x12     60 x 148 x  36 mm   x = ±56,5, em z = −95, −10 e +80 cm
+
+NÓS DA BASE (coordenadas do centro do nó, em cm)
+10_no_base_liso_superior_x2.stl            x2     125 x 125 x 112 mm   x = −56,5 z = +80 e x = +56,5 z = −95 (a mesma peça, girada 180° no segundo) | metade de cima, com o soquete do poste
+11_no_base_liso_inferior_x2.stl            x2     125 x 125 x  28 mm   x = −56,5 z = +80 e x = +56,5 z = −95 (a mesma peça, girada 180° no segundo) | metade de baixo, com o furo do pé
+12_no_base_diag37_canto_superior_x1.stl    x1     169 x 145 x 112 mm   x = −56,5 z = −95 (diagonal do painel da cabeceira, 37,0°) | metade de cima, com o soquete do poste
+13_no_base_diag37_canto_inferior_x1.stl    x1     169 x 145 x  28 mm   x = −56,5 z = −95 (diagonal do painel da cabeceira, 37,0°) | metade de baixo, com o furo do pé
+14_no_base_diag385_canto_superior_x1.stl   x1     167 x 147 x 112 mm   x = +56,5 z = +80 (diagonal do painel do pé, 38,5°) | metade de cima, com o soquete do poste
+15_no_base_diag385_canto_inferior_x1.stl   x1     167 x 147 x  28 mm   x = +56,5 z = +80 (diagonal do painel do pé, 38,5°) | metade de baixo, com o furo do pé
+16_no_base_BM385_superior_x1.stl           x1     167 x 214 x 112 mm   x = −56,5 z = −10 (diagonal do painel do pé, 38,5°) | metade de cima, com o soquete do poste
+17_no_base_BM385_inferior_x1.stl           x1     167 x 214 x  28 mm   x = −56,5 z = −10 (diagonal do painel do pé, 38,5°) | metade de baixo, com o furo do pé
+18_no_base_BM37_superior_x1.stl            x1     169 x 211 x 112 mm   x = +56,5 z = −10 (diagonal do painel da cabeceira, 37,0°) | metade de cima, com o soquete do poste
+19_no_base_BM37_inferior_x1.stl            x1     169 x 211 x  28 mm   x = +56,5 z = −10 (diagonal do painel da cabeceira, 37,0°) | metade de baixo, com o furo do pé
+
+CABECEIRA (tubo de 1"). Cada nó F e G usa uma metade de cada arquivo (xneg + xpos), por isso cada arquivo é impresso 2 vezes.
+20_cabeceira_F_xneg_x2.stl                 x2     125 x 125 x  23 mm   nó F, x = −71,5 (canto de cima)
+21_cabeceira_G_xneg_x2.stl                 x2     125 x 134 x  23 mm   nó G, x = −71,5 (canto de baixo)
+22_cabeceira_F_xpos_x2.stl                 x2     125 x 125 x  23 mm   nó F, x = +71,5
+23_cabeceira_G_xpos_x2.stl                 x2     125 x 134 x  23 mm   nó G, x = +71,5
+24_cabeceira_H_x4.stl                      x4     190 x 135 x  23 mm   nó H, x = ±35,75 (colar V de cima). As 2 metades de cada nó são iguais
+25_cabeceira_I_x2.stl                      x2     190 x 135 x  23 mm   nó I, x = 0 (colar V de baixo). As 2 metades são iguais
+
+PEÇAS DE TESTE: imprima primeiro. Cada arquivo sai 2 vezes (as duas metades são iguais, uma sobre a outra). Confira o tubo, o parafuso e o encaixe das metades.
+90_teste_soquete_1_1-4_x2.stl              x2     96 x  58 x  28 mm   soquete de 1¼" com 64 mm de profundidade e 1 furo M10
+91_teste_soquete_1_x2.stl                  x2     75 x  50 x  23 mm   soquete de 1" com 50 mm de profundidade e 1 furo M8
+
+AJUSTES DE IMPRESSÃO (PETG)
+----------------------------------------------------------------------------------------------------
+- Bico entre 235 e 245 °C, mesa entre 75 e 80 °C, ventoinha em 20 a 30%, camadas de 0,2 mm, 8 perímetros e 40% de preenchimento (versão leve: 6 perímetros e 25%).
+- Sem suporte. Os canais dos tubos têm o teto em "gota": semicírculo de 42,5 mm (34 mm nos nós de 1") com telhado inclinado a 45° e um trecho reto de 15 mm (12 mm nos de 1"). Isso deixa o canal imprimir sem suporte, e o tubo se apoia nos flancos a 45°.
+- Os rasgos planos de 20 mm de largura sobre os braços são o assento das arruelas dos parafusos. Não os remova.
+- As metades de cima dos nós da base têm 112 mm de altura, mas a base delas é larga (125 a 169 mm) e estável. O BM385 e o BM37 medem 214 e 211 mm no eixo Y: imprima sem borda (brim), com a mesa limpa e cola em bastão, e ponha o arquivo bem centrado.
+- Os 3 furos horizontais de 10,4 mm do soquete do poste (nas metades de cima da base) saem com o topo um pouco achatado, porque imprimem deitados. Passe uma broca de 10,5 mm nesses furos antes de montar.
+- Imprima primeiro os testes 90 e 91 (ou uma sela: arquivos 01 e 02) e meça o canal: o tubo de 42,2 mm deve entrar com folga de uns 0,15 mm. Se ficar justo ou frouxo, escale o arquivo em 0,3% para mais ou para menos, ou ajuste a expansão horizontal do fatiador em 0,05 mm.
+
+FURAÇÃO E FERRAGENS (conferidas no modelo)
+----------------------------------------------------------------------------------------------------
+- Nós da base e colares: furos de 10,4 mm para M10. Braços da base: 2 furos verticais por braço. Soquete do poste: 3 furos horizontais a 50, 70 e 90 mm do fundo do nó. Arruelas ISO 7089 (Ø20 para M10, Ø16 para M8, Ø12 para M6).
+- M10 × 80 nos braços da base e nos soquetes dos postes (a conta pede 72 mm: 55 entre os rasgos planos + 2 arruelas de 2 + porca autotravante de 10 + 3 de rosca).
+- Anel dos colares PC: 2 furos de 10,4 mm por colar, com rebaixo de Ø22 mm. M10 × 55 (34 + 4 + 10 + 3 de rosca).
+- Selas: as pernas do grampo U de 1¼" (M8, furos de 8,4 mm) atravessam a sela inteira e prendem as duas metades. Use grampos com pernas de pelo menos 65 mm abaixo do arco (a conta pede 62,7 mm: 48,5 + 2 × 1,6 + 8 + 3), arruela ISO 7089 M8 e porca autotravante. Não há parafuso M6 na sela.
+- Cabeceira: M8 × 65 nos soquetes (3 por soquete nos braços retos, 2 nos braços das diagonais; a conta pede 60 mm: 46 + 2 × 1,6 + 8 + 3) e M6 × 40 nos anéis dos colares H e I.
+- Fundo das metades de baixo dos nós da base: furo de 8,5 mm, com inserto de latão M8 para o pé nivelador.
+- Pinos de aço 4 × 20 mm nos furos de 4,2 mm do plano de corte (10 mm de cada lado). Total de 77 pinos.
+
+CORTES QUE MUDARAM COM ESTAS PEÇAS: diagonais da base com 124,4 e 127,5 cm (ponta a 85 mm do centro do nó) e diagonais da cabeceira com 42,7 cm (ponta a 70 mm do vértice).
+
+Filamento estimado: 11,4 kg (9,2 kg na versão leve). Estimativa pelos sólidos dos STL: paredes de 8 × 0,45 mm mais 40% de preenchimento no resto (6 × 0,45 mm e 25% na versão leve), PETG a 1,27 g/cm³ e 5% para saia e purga. Confirme fatiando a maior peça.
